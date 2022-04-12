@@ -1,8 +1,8 @@
 const router = require("express").Router();
 
-//const controller = require("./components/controller");
+const movies = require("./components/moviesController");
 
-/*Example of a route
-router.get("/episodes", controller.getAllEpisodes);*/
+router.get("/movies", movies.getMovies);
+router.get("/movies/:id", movies.getMovieById);
 
 module.exports = router;
