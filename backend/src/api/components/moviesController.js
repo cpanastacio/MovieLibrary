@@ -24,15 +24,15 @@ async function getMovies(req, res) {
 async function insertMovie(req, res) {
   try {
     const m = {
-      title: 'Game of Thrones',
-      year: '2011–2019',
-      released: '17 Apr 2011',
-      genre: 'Action, Adventure, Drama',
-      plot: 'In the mythical continent of Westeros, several powerful families fight for control of the Seven Kingdoms. As conflict erupts in the kingdoms of men, an ancient enemy rises once again to threaten them all. Meanwhile, the last heirs of a recently usurped dynasty plot to take back their homeland from across the Narrow Sea.',
-      poster: 'https://m.media-amazon.com/images/M/MV5BYTRiNDQwYzAtMzVlZS00NTI5LWJjYjUtMzkwNTUzMWMxZTllXkEyXkFqcGdeQXVyNDIzMzcwNjc@._V1_SX300.jpg',
-      rating: '9.3 / 10 ',
-      type: 'series',
-      totalSeasons: '8',
+      title: req.body.title,
+      year: req.body.year,
+      released: req.body.released,
+      genre: req.body.genre,
+      plot: req.body.plot,
+      poster: req.body.poster,
+      rating: req.body.rating,
+      type: req.body.type,
+      totalSeasons: req.body.totalSeasons,
     };
     const newMovie = await Movie.insertMany(m);
     return res.json({
