@@ -1,8 +1,9 @@
-const router = require("express").Router();
+const router = require('express').Router();
 
-const movies = require("./components/moviesController");
+const movies = require('./components/moviesController');
 
-router.get("/movies", movies.getMovies);
-router.get("/movies/:id", movies.getMovieById);
+router.get('/movies', movies.getMovies);
+router.post('/movies', movies.insertMovie); // dummy route for test purpose
+router.get('/movies/:id', movies.getMovieById);
 
 module.exports = router;
