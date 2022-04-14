@@ -5,6 +5,7 @@ import { Col, Row } from "react-bootstrap";
 
 const CardWrapper = () => {
     const [movies, setMovies] = useState([]);
+
     useEffect(() => {
         const fetchMovies = async () => {
             try {

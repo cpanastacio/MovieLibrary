@@ -12,7 +12,7 @@ const movieSchema = new Schema({
   poster: { type: String, required: true },
   rating: { type: String, required: true },
   type: { type: String, required: true },
-  totalSeasons: { type: String, required: true },
+  totalSeasons: { type: String, required: false },
 }, {
   timestamps: true,
 });

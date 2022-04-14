@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navbar, NavDropdown, Nav, Container, Form, FormControl, Button } from "react-bootstrap";
+import { getMovieIfNotExistsAddsDB } from "../../API";
 
 const Header = () => {
+    const [movie, setMovie] = useState("");
+
+    const handleOnChange = (e) => {
+        setMovie(e.target.value);
+    };
+    const fetchRequest = async () => {
+        try {
+            const result = await getMovieIfNotExistsAddsDB(movie);
+            return setMovie(result);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setMovie("");
+        }
+    };
+
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
@@ -9,10 +26,19 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="#features">Home</Nav.Link>
+                        <Nav.Link href="/">Home</Nav.Link>
                         <Form className="d-flex">
-                            <FormControl type="search" placeholder="Search" className="me-2" aria-label="Search" />
-                            <Button variant="outline-success">Search</Button>
+                            <FormControl
+                                value={movie}
+                                type="search"
+                                placeholder="Search"
+                                className="me-2"
+                                aria-label="Search"
+                                onChange={handleOnChange}
+                            />
+                            <Button onClick={fetchRequest} variant="outline-success">
+                                Search
+                            </Button>
                         </Form>
                     </Nav>
                     <Nav>

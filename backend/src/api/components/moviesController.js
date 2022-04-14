@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const axios = require('axios');
 const movieSchema = require('../models/movie');
 
 const Movie = mongoose.model('Movie', movieSchema.schema);
@@ -51,6 +52,7 @@ async function insertMovie(req, res) {
  * @returns
  */
 async function getMovieById(req, res) {
+  console.log('Rota errada');
   try {
     const m = await Movie.findById(req.params.id);
     return res.status(200).json({
@@ -64,8 +66,38 @@ async function getMovieById(req, res) {
   }
 }
 
+async function getMovieIfNotExistsAddsDB(req, res) {
+  try {
+    const m = await Movie.find({ title: { $regex: req.params.name } });
+    if (m.length > 0) {
+      return res.json(m);
+    }
+    const baseUrl = `https://www.omdbapi.com/?t=${req.params.name}&plot=short&apikey=${process.env.API_KEY}`;
+    const result = await axios.get(baseUrl);
+    const newMovieObj = {
+      title: result.data.Title,
+      year: result.data.Year,
+      released: result.data.Released,
+      genre: result.data.Genre,
+      plot: result.data.Plot,
+      poster: result.data.Poster,
+      rating: result.data.imdbRating,
+      type: result.data.Type,
+      totalSeasons: result.data.totalSeasons,
+    };
+    await Movie.insertMany(newMovieObj);
+    return res.json(newMovieObj);
+  } catch (error) {
+    if (error && error.status && error.status !== 200) {
+      return res.status(error.status).json(error.message);
+    }
+    return res.json(error);
+  }
+}
+
 module.exports = {
   getMovies,
   getMovieById,
   insertMovie,
+  getMovieIfNotExistsAddsDB,
 };
