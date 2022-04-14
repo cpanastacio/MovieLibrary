@@ -1,17 +1,25 @@
-//Requiring module
-const express = require("express");
-const cors = require("cors");
+// Requiring module
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+require('dotenv').config();
+const routes = require('./api/routes');
 
-//Creating express object
+// Creating express object and configure server port
 const server = express();
+const PORT = process.env.PORT || 8000;
+
 server.use(express.json());
 server.use(cors());
+server.use(routes);
 
-server.use(require("./api/routes"));
+const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.zgoi4.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
 
-const PORT = 8000;
-
-//Server setup
-server.listen(PORT, console.log(`Server started on port ${PORT}`));
+mongoose.connect(uri).then(() => {
+  server.listen(PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+});
 
 module.exports = server;
