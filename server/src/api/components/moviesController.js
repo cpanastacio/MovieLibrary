@@ -22,29 +22,6 @@ async function getMovies(req, res) {
   }
 }
 
-async function insertMovie(req, res) {
-  try {
-    const m = {
-      title: req.body.title,
-      year: req.body.year,
-      released: req.body.released,
-      genre: req.body.genre,
-      plot: req.body.plot,
-      poster: req.body.poster,
-      rating: req.body.rating,
-      type: req.body.type,
-      totalSeasons: req.body.totalSeasons,
-    };
-    const newMovie = await Movie.insertMany(m);
-    return res.json({
-      message: 'Movie added',
-      movie: newMovie,
-    });
-  } catch (error) {
-    return res.json(error);
-  }
-}
-
 /**
  * Responsible for fetching a movie by its id
  * @param {Object} req - Request object
@@ -52,7 +29,6 @@ async function insertMovie(req, res) {
  * @returns
  */
 async function getMovieById(req, res) {
-  console.log('Rota errada');
   try {
     const m = await Movie.findById(req.params.id);
     return res.status(200).json({
@@ -84,6 +60,8 @@ async function getMovieIfNotExistsAddsDB(req, res) {
       rating: result.data.imdbRating,
       type: result.data.Type,
       totalSeasons: result.data.totalSeasons,
+      writer: result.data.Writer,
+      actors: result.data.Actors,
     };
     await Movie.insertMany(newMovieObj);
     return res.json(newMovieObj);
@@ -98,6 +76,5 @@ async function getMovieIfNotExistsAddsDB(req, res) {
 module.exports = {
   getMovies,
   getMovieById,
-  insertMovie,
   getMovieIfNotExistsAddsDB,
 };

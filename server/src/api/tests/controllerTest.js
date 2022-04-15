@@ -1,9 +1,9 @@
-let chai = require("chai");
-const chaiHttp = require("chai-http");
-let server = require("../../server");
+let chai = require('chai');
+const chaiHttp = require('chai-http');
+let server = require('../../server');
 let should = chai.should();
 
-describe("Testing controller method", () => {
+describe('Testing controller method', () => {
   //Get example
   /*it("It should GET all episodes", (done) => {
         chai.request(server)
