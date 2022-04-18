@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+// eslint-disable-next-line consistent-return
 function authenticateToken(req, res, next) {
   let token = req.header('Authorization');
   if (token) token = token.replace('Bearer ', '');

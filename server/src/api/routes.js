@@ -11,8 +11,8 @@ router.get('/movies', movies.getMovies);
 router.get('/movies/:id', movies.getMovieById);
 router.get('/movie/:name', movies.getMovieIfNotExistsAddsDB);
 
-router.post('/user/register', validator(schemas.user.register), user.register);
-router.post('/user/login', user.login);
-router.delete('/user:', authenticate, user.deleteUser);
+router.post('/register', validator(schemas.user.register), user.register);
+router.post('/login', user.login);
+router.delete('/:id', authenticate, user.deleteUser);
 
 module.exports = router;

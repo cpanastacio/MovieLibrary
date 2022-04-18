@@ -19,3 +19,12 @@ export async function getMovieIfNotExistsAddsDB(name) {
     throw new Error(error);
   }
 }
+
+export async function register(user) {
+  try {
+    const createUser = await axios.post(`${baseUrl}/register`, { user });
+    return createUser.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}

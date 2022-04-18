@@ -9,9 +9,12 @@ import {
   Button,
 } from 'react-bootstrap';
 import { getMovieIfNotExistsAddsDB } from '../../API';
+import ModalForm from '../ModalForm/ModalForm';
 
 const Header = () => {
   const [movie, setMovie] = useState('');
+  const [modalShowR, setModalShowR] = useState(false);
+  const [modalShowL, setModalShowL] = useState(false);
 
   const handleOnChange = (e) => {
     setMovie(e.target.value);
@@ -50,7 +53,25 @@ const Header = () => {
             </Form>
           </Nav>
           <Nav>
-            <NavDropdown title='User' id='collasible-nav-dropdown'>
+            <NavDropdown title={'XWIFE3'} id='collasible-nav-dropdown'>
+              <NavDropdown.Item>
+                <h6 onClick={() => setModalShowR(true)}>Register</h6>
+                <ModalForm
+                  show={modalShowR}
+                  onHide={() => setModalShowR(false)}
+                  header={'Create new account'}
+                  isRegister={true}
+                />
+              </NavDropdown.Item>
+              <NavDropdown.Item>
+                <h6 onClick={() => setModalShowL(true)}>Login</h6>
+                <ModalForm
+                  show={modalShowL}
+                  onHide={() => setModalShowL(false)}
+                  header={'Login'}
+                  isRegister={false}
+                />
+              </NavDropdown.Item>
               <NavDropdown.Item href='#action/3.1'>
                 User profile
               </NavDropdown.Item>
