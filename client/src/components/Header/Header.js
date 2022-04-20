@@ -40,6 +40,11 @@ const Header = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    window.location.reload(true);
+  };
+
   return (
     <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
       <Container>
@@ -67,28 +72,33 @@ const Header = () => {
               title={user ? user.username : 'User'}
               id='collasible-nav-dropdown'
             >
-              <NavDropdown.Item>
-                <h6 onClick={() => setModalShowR(true)}>Register</h6>
-                <ModalForm
-                  show={modalShowR}
-                  onHide={() => setModalShowR(false)}
-                  header={'Create new account'}
-                  isRegister={true}
-                />
-              </NavDropdown.Item>
-              <NavDropdown.Item>
-                <h6 onClick={() => setModalShowL(true)}>Login</h6>
-                <ModalForm
-                  show={modalShowL}
-                  onHide={() => setModalShowL(false)}
-                  header={'Login'}
-                  isRegister={false}
-                />
-              </NavDropdown.Item>
+              {user == null ? (
+                <NavDropdown.Item>
+                  <h6 onClick={() => setModalShowR(true)}>Register</h6>
+                  <ModalForm
+                    show={modalShowR}
+                    onHide={() => setModalShowR(false)}
+                    header={'Create new account'}
+                    isRegister={true}
+                  />
+                </NavDropdown.Item>
+              ) : null}
+
+              {user == null ? (
+                <NavDropdown.Item>
+                  <h6 onClick={() => setModalShowL(true)}>Login</h6>
+                  <ModalForm
+                    show={modalShowL}
+                    onHide={() => setModalShowL(false)}
+                    header={'Login'}
+                    isRegister={false}
+                  />
+                </NavDropdown.Item>
+              ) : null}
               <NavDropdown.Item href='#action/3.1'>
                 User profile
               </NavDropdown.Item>
-              <NavDropdown.Item href='#action/3.1'>Logout</NavDropdown.Item>
+              <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
