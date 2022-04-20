@@ -4,29 +4,38 @@ import { Form, Button } from 'react-bootstrap';
 import { register, login } from '../../API';
 
 const Formu = ({ isRegister, onHide }) => {
-  if (isRegister) {
-    const [newUser, setNewUser] = useState({
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    });
+  const [newUser, setNewUser] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  const [loginUser, setLoginUser] = useState({
+    username: '',
+    password: '',
+  });
 
-    const handleAddFormChange = (event) => {
-      event.preventDefault();
+  const handleAddFormChange = (event) => {
+    event.preventDefault();
 
-      const fieldName = event.target.getAttribute('name');
-      const fieldValue = event.target.value;
-
-      const newFormData = { ...newUser };
+    const fieldName = event.target.getAttribute('name');
+    const fieldValue = event.target.value;
+    let newFormData = {};
+    if (isRegister) {
+      newFormData = { ...newUser };
       newFormData[fieldName] = fieldValue;
-
       setNewUser(newFormData);
-    };
+    } else {
+      newFormData = { ...loginUser };
+      newFormData[fieldName] = fieldValue;
+      setLoginUser(newFormData);
+    }
+  };
 
-    const handleAddFormSubmit = (event) => {
-      event.preventDefault();
+  const handleAddFormSubmit = (event) => {
+    event.preventDefault();
 
+    if (isRegister) {
       const userObj = {
         username: newUser.username,
         email: newUser.email,
@@ -48,80 +57,13 @@ const Formu = ({ isRegister, onHide }) => {
         }
       };
       registerUser();
-    };
-
-    return (
-      <Form>
-        <Form.Group className='mb-3' controlId='formBasicEmail'>
-          <Form.Label>Username</Form.Label>
-          <Form.Control
-            type='username'
-            name='username'
-            placeholder='Enter Username'
-            onChange={handleAddFormChange}
-          />
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
-            type='email'
-            name='email'
-            placeholder='Enter email'
-            onChange={handleAddFormChange}
-          />
-        </Form.Group>
-
-        <Form.Group className='mb-3' controlId='formBasicPassword'>
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type='password'
-            name='password'
-            placeholder='Password'
-            onChange={handleAddFormChange}
-          />
-          <Form.Label>Confirm password</Form.Label>
-          <Form.Control
-            type='password'
-            name='confirmPassword'
-            placeholder='Password'
-            onChange={handleAddFormChange}
-          />
-        </Form.Group>
-        <Button
-          variant='primary'
-          data-bs-dismiss='modal'
-          onClick={handleAddFormSubmit}
-        >
-          Create new account
-        </Button>
-      </Form>
-    );
-  } else {
-    const [loginUser, setLoginUser] = useState({
-      username: '',
-      password: '',
-    });
-
-    const handleAddFormChange = (event) => {
-      event.preventDefault();
-
-      const fieldName = event.target.getAttribute('name');
-      const fieldValue = event.target.value;
-
-      const newFormData = { ...loginUser };
-      newFormData[fieldName] = fieldValue;
-
-      setLoginUser(newFormData);
-    };
-
-    const handleAddFormSubmit = (event) => {
-      event.preventDefault();
-
+    } else {
       const userObj = {
         username: loginUser.username,
         password: loginUser.password,
       };
       setLoginUser(userObj);
-
-      const registerUser = async () => {
+      const loginUser = async () => {
         try {
           const response = await login(userObj.username, userObj.password);
           console.log(response);
@@ -129,43 +71,65 @@ const Formu = ({ isRegister, onHide }) => {
           onHide(); //closes the modal
         } catch (error) {
           alert(error);
-
           console.error(error);
         }
       };
-      registerUser();
-    };
-    return (
-      <Form>
-        <Form.Group className='mb-3' controlId='formBasicEmailLogin'>
-          <Form.Label>Username</Form.Label>
-          <Form.Control
-            type='username'
-            name='username'
-            placeholder='Enter Username'
-            onChange={handleAddFormChange}
-          />
-        </Form.Group>
+      loginUser();
+    }
+  };
 
-        <Form.Group className='mb-3' controlId='formBasicPasswordLogin'>
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type='password'
-            placeholder='Password'
-            name='password'
-            onChange={handleAddFormChange}
-          />
-        </Form.Group>
-        <Button
-          variant='primary'
-          data-bs-dismiss='modal'
-          onClick={handleAddFormSubmit}
-        >
-          Create new account
-        </Button>
-      </Form>
-    );
-  }
+  return (
+    <Form>
+      <Form.Group className='mb-3' controlId='formBasicEmail'>
+        <Form.Label>Username</Form.Label>
+        <Form.Control
+          type='username'
+          name='username'
+          placeholder='Enter Username'
+          onChange={handleAddFormChange}
+        />
+        {isRegister ? (
+          <>
+            <Form.Label>Email address</Form.Label>
+            <Form.Control
+              type='email'
+              name='email'
+              placeholder='Enter email'
+              onChange={handleAddFormChange}
+            />
+          </>
+        ) : null}
+      </Form.Group>
+
+      <Form.Group className='mb-3' controlId='formBasicPassword'>
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          type='password'
+          name='password'
+          placeholder='Password'
+          onChange={handleAddFormChange}
+        />
+        {isRegister ? (
+          <>
+            <Form.Label>Confirm password</Form.Label>
+            <Form.Control
+              type='password'
+              name='confirmPassword'
+              placeholder='Password'
+              onChange={handleAddFormChange}
+            />
+          </>
+        ) : null}
+      </Form.Group>
+      <Button
+        variant='primary'
+        data-bs-dismiss='modal'
+        onClick={handleAddFormSubmit}
+      >
+        {isRegister ? 'Create new account' : 'Login'}
+      </Button>
+    </Form>
+  );
 };
 
 Formu.propTypes = {
