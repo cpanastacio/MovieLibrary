@@ -33,11 +33,11 @@ const Header = () => {
   return (
     <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
       <Container>
-        <Navbar.Brand href='#home'>Movies Library</Navbar.Brand>
+        <Navbar.Brand href='/'>Movies Library</Navbar.Brand>
         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
         <Navbar.Collapse id='responsive-navbar-nav'>
           <Nav className='me-auto'>
-            <Nav.Link href='/'>Home</Nav.Link>
+            {/* <Nav.Link href='/'>Home</Nav.Link> */}
             <Form className='d-flex'>
               <FormControl
                 value={movie}

@@ -10,14 +10,11 @@ const ModalForm = ({ show, onHide, header, isRegister }) => {
         <Modal.Title>{header}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Formu isRegister={isRegister} />
+        <Formu isRegister={isRegister} onHide={onHide} />
       </Modal.Body>
       <Modal.Footer>
-        <Button variant='secondary' onClick={onHide}>
+        <Button variant='secondary' data-bs-dismiss='modal' onClick={onHide}>
           Close
-        </Button>
-        <Button variant='primary' onClick={onHide}>
-          Login
         </Button>
       </Modal.Footer>
     </Modal>
