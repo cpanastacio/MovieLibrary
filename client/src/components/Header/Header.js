@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Navbar,
   NavDropdown,
@@ -15,6 +15,16 @@ const Header = () => {
   const [movie, setMovie] = useState('');
   const [modalShowR, setModalShowR] = useState(false);
   const [modalShowL, setModalShowL] = useState(false);
+
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('user') || null;
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      setUser(foundUser);
+    }
+  });
 
   const handleOnChange = (e) => {
     setMovie(e.target.value);
@@ -53,7 +63,10 @@ const Header = () => {
             </Form>
           </Nav>
           <Nav>
-            <NavDropdown title={'XWIFE3'} id='collasible-nav-dropdown'>
+            <NavDropdown
+              title={user ? user.username : 'User'}
+              id='collasible-nav-dropdown'
+            >
               <NavDropdown.Item>
                 <h6 onClick={() => setModalShowR(true)}>Register</h6>
                 <ModalForm

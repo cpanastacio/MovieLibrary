@@ -10,77 +10,53 @@ const Formu = ({ isRegister, onHide }) => {
     password: '',
     confirmPassword: '',
   });
-  const [loginUser, setLoginUser] = useState({
-    username: '',
-    password: '',
-  });
 
+  //Handles the input data that comes from the form
   const handleAddFormChange = (event) => {
     event.preventDefault();
 
     const fieldName = event.target.getAttribute('name');
     const fieldValue = event.target.value;
     let newFormData = {};
-    if (isRegister) {
-      newFormData = { ...newUser };
-      newFormData[fieldName] = fieldValue;
-      setNewUser(newFormData);
-    } else {
-      newFormData = { ...loginUser };
-      newFormData[fieldName] = fieldValue;
-      setLoginUser(newFormData);
-    }
+    newFormData = { ...newUser };
+    newFormData[fieldName] = fieldValue;
+    setNewUser(newFormData);
   };
 
+  //Handles the submit allowing the user register or login
   const handleAddFormSubmit = (event) => {
     event.preventDefault();
 
-    if (isRegister) {
-      const userObj = {
-        username: newUser.username,
-        email: newUser.email,
-        password: newUser.password,
-        confirmPassword: newUser.confirmPassword,
-      };
-      setNewUser(userObj);
+    const userObj = {
+      username: newUser.username,
+      email: newUser.email,
+      password: newUser.password,
+      confirmPassword: newUser.confirmPassword,
+    };
+    setNewUser(userObj);
 
-      const registerUser = async () => {
-        try {
+    const registerOrLogin = async () => {
+      try {
+        if (isRegister) {
           const response = await register(newUser);
           alert(response.message);
-          setNewUser({});
-          onHide(); //closes the modal
-        } catch (error) {
-          alert(error);
-
-          console.error(error);
-        }
-      };
-      registerUser();
-    } else {
-      const userObj = {
-        username: loginUser.username,
-        password: loginUser.password,
-      };
-      setLoginUser(userObj);
-      const loginUser = async () => {
-        try {
+        } else {
           const response = await login(userObj.username, userObj.password);
-          console.log(response);
-          setLoginUser({});
-          onHide(); //closes the modal
-        } catch (error) {
-          alert(error);
-          console.error(error);
+          alert(`Welcome ${response.username}`);
+          localStorage.setItem('user', JSON.stringify(response));
         }
-      };
-      loginUser();
-    }
+        setNewUser({});
+        onHide(); //closes the modal
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    registerOrLogin();
   };
 
   return (
     <Form>
-      <Form.Group className='mb-3' controlId='formBasicEmail'>
+      <Form.Group className='mb-3'>
         <Form.Label>Username</Form.Label>
         <Form.Control
           type='username'
@@ -101,7 +77,7 @@ const Formu = ({ isRegister, onHide }) => {
         ) : null}
       </Form.Group>
 
-      <Form.Group className='mb-3' controlId='formBasicPassword'>
+      <Form.Group className='mb-3'>
         <Form.Label>Password</Form.Label>
         <Form.Control
           type='password'
