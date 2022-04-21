@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-const baseUrl = `http://localhost:${8080}`;
-
 export async function getMovies() {
   try {
-    const movies = await axios.get(`${baseUrl}/movies`);
+    const movies = await axios.get(`/movies`);
     return movies.data;
   } catch (error) {
     throw new Error(error);
@@ -13,7 +11,7 @@ export async function getMovies() {
 
 export async function getMovieIfNotExistsAddsDB(name) {
   try {
-    const movies = await axios.get(`${baseUrl}/movie/${name}`);
+    const movies = await axios.get(`/movie/${name}`);
     return movies.data;
   } catch (error) {
     throw new Error(error);
@@ -22,7 +20,7 @@ export async function getMovieIfNotExistsAddsDB(name) {
 
 export async function register(user) {
   try {
-    const createUser = await axios.post(`${baseUrl}/register`, user);
+    const createUser = await axios.post(`/register`, user);
     return createUser.data;
   } catch (error) {
     throw new Error(error);
@@ -31,7 +29,7 @@ export async function register(user) {
 
 export async function login(username, password) {
   try {
-    const loginUser = await axios.post(`${baseUrl}/login`, {
+    const loginUser = await axios.post(`/login`, {
       username,
       password,
     });
