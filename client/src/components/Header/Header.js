@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Navbar,
   NavDropdown,
@@ -12,6 +13,12 @@ import { getMovieIfNotExistsAddsDB } from '../../API';
 import ModalForm from '../ModalForm/ModalForm';
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const handleUserProfile = () => {
+    navigate(`/user`);
+  };
+
   const [movie, setMovie] = useState('');
   const [modalShowR, setModalShowR] = useState(false);
   const [modalShowL, setModalShowL] = useState(false);
@@ -95,9 +102,11 @@ const Header = () => {
                   />
                 </NavDropdown.Item>
               ) : null}
-              <NavDropdown.Item href='#action/3.1'>
-                User profile
-              </NavDropdown.Item>
+              {user != null ? (
+                <NavDropdown.Item onClick={handleUserProfile}>
+                  User profile
+                </NavDropdown.Item>
+              ) : null}
               <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
             </NavDropdown>
           </Nav>
