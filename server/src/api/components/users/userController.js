@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
 
 const userSchema = require('../../models/users');
 
@@ -30,43 +29,34 @@ async function register(req, res) {
 
 /**
  * Responsible for user login
- * @param {Object} req - Request object
- * @param {Object} res - Response object
+ * @param {String} username - user's username
+ * @param {String} password - user's password
  * @returns
  */
-async function login(req, res) {
+async function loginUser(username, password) {
   try {
     const user = await User.find({
-      username: req.body.username,
-      password: req.body.password,
-    });
-    const token = jwt.sign(
-      { username: req.body.username, password: req.body.password },
-      process.env.ACCESS_TOKEN_SECRET,
-    );
+      username,
+      password,
+    }).lean();
+    if (user.length === 0) {
+      return {
+        error: {
+          status: 403,
+          message: 'Wrong username or password!',
+        },
+      };
+    }
     const response = {
       // eslint-disable-next-line no-underscore-dangle
       id: user[0]._id,
       username: user[0].username,
-      password: user[0].password,
       email: user[0].email,
     };
-    return res.json({ ...response, token });
+    return response;
   } catch (error) {
-    return res.status(500).json({
-      error,
-    });
+    return { error };
   }
 }
 
-async function deleteUser(req, res) {
-  try {
-    console.log('yes');
-    return res.json('provisorio');
-  } catch (error) {
-    console.log('no');
-    return res.status(500).json(error);
-  }
-}
-
-module.exports = { register, login, deleteUser };
+module.exports = { register, loginUser };
