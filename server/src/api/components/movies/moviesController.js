@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const axios = require('axios');
-const movieSchema = require('../models/movie');
+const movieSchema = require('../../models/movie');
 
 const Movie = mongoose.model('Movie', movieSchema.schema);
 // const asyncValidator = require('../helpers/utils');
@@ -44,7 +44,9 @@ async function getMovieById(req, res) {
 
 async function getMovieIfNotExistsAddsDB(req, res) {
   try {
-    const m = await Movie.find({ title: { $regex: req.params.name } });
+    const m = await Movie.find({
+      title: { $regex: req.params.name },
+    });
     if (m.length > 0) {
       return res.json(m);
     }
