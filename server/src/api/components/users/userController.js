@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = require('../../models/users');
-const { hashPassword, comparePassword } = require('../../helpers/utils');
 
 const User = mongoose.model('User', userSchema.schema);
 
@@ -13,8 +13,9 @@ const User = mongoose.model('User', userSchema.schema);
  */
 async function register(req, res) {
   const { username, password, email } = req.body;
+  const SALT_ROUNDS = 10;
   try {
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     const user = {
       username,
       password: hashedPassword,
@@ -44,7 +45,7 @@ async function loginUser(username, password) {
     }).lean();
 
     if (user.length > 0) {
-      passwordDecrypt = await comparePassword(password, user[0].password);
+      passwordDecrypt = await bcrypt.compare(password, user[0].password);
     }
     if (user.length === 0 || !passwordDecrypt) {
       return {
