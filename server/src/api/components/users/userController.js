@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = require('../../models/users');
+const { hashPassword, comparePassword } = require('../../helpers/utils');
 
 const User = mongoose.model('User', userSchema.schema);
 
@@ -11,12 +12,14 @@ const User = mongoose.model('User', userSchema.schema);
  * @returns
  */
 async function register(req, res) {
-  const user = {
-    username: req.body.username,
-    password: req.body.password,
-    email: req.body.email,
-  };
+  const { username, password, email } = req.body;
   try {
+    const hashedPassword = await hashPassword(password);
+    const user = {
+      username,
+      password: hashedPassword,
+      email,
+    };
     await User.insertMany(user);
     return res.json({ message: `User ${user.username} created!` });
   } catch (error) {
@@ -34,28 +37,31 @@ async function register(req, res) {
  * @returns
  */
 async function loginUser(username, password) {
+  let passwordDecrypt = false;
   try {
     const user = await User.find({
       username,
-      password,
     }).lean();
-    if (user.length === 0) {
+
+    if (user.length > 0) {
+      passwordDecrypt = await comparePassword(password, user[0].password);
+    }
+    if (user.length === 0 || !passwordDecrypt) {
       return {
         error: {
           status: 403,
-          message: 'Wrong username or password!',
+          message: 'Wrong credentials!',
         },
       };
     }
-    const response = {
+    return {
       // eslint-disable-next-line no-underscore-dangle
       id: user[0]._id,
       username: user[0].username,
       email: user[0].email,
     };
-    return response;
   } catch (error) {
-    return { error };
+    return { status: 500, message: error.message };
   }
 }
 

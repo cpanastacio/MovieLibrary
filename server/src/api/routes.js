@@ -30,19 +30,23 @@ router.get('/movie/:name', movies.getMovieIfNotExistsAddsDB);
 router.post('/register', validator(schemas.user.register), user.register);
 
 // Endpoint responsible for authenticating a user based on its password and username
-router.post('/authenticate', async (req, res) => {
-  sessionData = req.session;
-  sessionData.user = {};
-  const { username, password } = req.body;
-  const result = await user.loginUser(username, password);
-  if (result.error) {
-    return res
-      .status(result.error.status)
-      .json({ error: result.error.message });
-  }
-  sessionData.user = result;
-  return res.json(result);
-});
+router.post(
+  '/authenticate',
+  validator(schemas.user.login),
+  async (req, res) => {
+    sessionData = req.session;
+    sessionData.user = {};
+    const { username, password } = req.body;
+    const result = await user.loginUser(username, password);
+    if (result.error) {
+      return res
+        .status(result.error.status)
+        .json({ error: result.error.message });
+    }
+    sessionData.user = result;
+    return res.json(result);
+  },
+);
 
 // Responsible for fetching a user's session
 router.get('/get_session', authenticator, (req, res) => {
