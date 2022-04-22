@@ -9,6 +9,7 @@ import MovieDetails from './components/MovieDetails/MovieDetails';
 import UserDetail from './components/UserDetail/UserDetail';
 
 function App() {
+  const userIsLoggedIn = localStorage.getItem('loggedIn');
   return (
     <div className='App'>
       <Router>
@@ -23,7 +24,9 @@ function App() {
             }
           ></Route>
           <Route path={`/tv:title`} element={<MovieDetails />}></Route>
-          <Route path={`/user`} element={<UserDetail />}></Route>
+          {userIsLoggedIn ? (
+            <Route path={`/user`} element={<UserDetail />}></Route>
+          ) : null}
           <Route path={`*`} element={<h1>404. Page not found!</h1>}></Route>
         </Routes>
       </Router>

@@ -9,7 +9,7 @@ import {
   FormControl,
   Button,
 } from 'react-bootstrap';
-import { getMovieIfNotExistsAddsDB } from '../../API';
+import { getMovieIfNotExistsAddsDB, logout, getSession } from '../../API';
 import ModalForm from '../ModalForm/ModalForm';
 
 const Header = () => {
@@ -26,16 +26,13 @@ const Header = () => {
   const [user, setUser] = useState();
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('user') || null;
-    if (loggedInUser) {
-      const foundUser = JSON.parse(loggedInUser);
-      setUser(foundUser);
-    }
-  });
+    getSession().then((myData) => setUser(myData));
+  }, []);
 
   const handleOnChange = (e) => {
     setMovie(e.target.value);
   };
+
   const fetchRequest = async () => {
     try {
       const result = await getMovieIfNotExistsAddsDB(movie);
@@ -48,7 +45,16 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    const fetchRequest = async () => {
+      try {
+        const result = await logout();
+        localStorage.clear();
+        return result.data;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchRequest();
     window.location.reload(true);
   };
 
@@ -79,7 +85,7 @@ const Header = () => {
               title={user ? user.username : 'User'}
               id='collasible-nav-dropdown'
             >
-              {user == null ? (
+              {!user ? (
                 <NavDropdown.Item>
                   <h6 onClick={() => setModalShowR(true)}>Register</h6>
                   <ModalForm
@@ -91,7 +97,7 @@ const Header = () => {
                 </NavDropdown.Item>
               ) : null}
 
-              {user == null ? (
+              {!user ? (
                 <NavDropdown.Item>
                   <h6 onClick={() => setModalShowL(true)}>Login</h6>
                   <ModalForm
@@ -99,6 +105,7 @@ const Header = () => {
                     onHide={() => setModalShowL(false)}
                     header={'Login'}
                     isRegister={false}
+                    setUser={setUser}
                   />
                 </NavDropdown.Item>
               ) : null}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Button } from 'react-bootstrap';
 import { register, login } from '../../API';
 
-const Formu = ({ isRegister, onHide }) => {
+const Formu = ({ isRegister, onHide, setUser }) => {
   const [newUser, setNewUser] = useState({
     username: '',
     email: '',
@@ -43,7 +43,8 @@ const Formu = ({ isRegister, onHide }) => {
         } else {
           const response = await login(userObj.username, userObj.password);
           alert(`Welcome ${response.username}`);
-          localStorage.setItem('user', JSON.stringify(response));
+          setUser(response);
+          localStorage.setItem('loggedIn', true);
         }
         setNewUser({});
         onHide(); //closes the modal
@@ -111,6 +112,7 @@ const Formu = ({ isRegister, onHide }) => {
 Formu.propTypes = {
   isRegister: PropTypes.bool,
   onHide: PropTypes.func,
+  setUser: PropTypes.func,
 };
 
 export default Formu;

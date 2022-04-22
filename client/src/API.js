@@ -29,11 +29,26 @@ export async function register(user) {
 
 export async function login(username, password) {
   try {
-    const loginUser = await axios.post(`/login`, {
-      username,
-      password,
-    });
+    const loginUser = await axios.post(`/authenticate`, { username, password });
     return loginUser.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function getSession() {
+  try {
+    const logoutUser = await axios.get(`/get_session`);
+    return logoutUser.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function logout() {
+  try {
+    const logoutUser = await axios.get(`/destroysession`);
+    return logoutUser.data;
   } catch (error) {
     throw new Error(error);
   }

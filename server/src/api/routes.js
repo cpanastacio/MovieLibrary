@@ -48,10 +48,8 @@ router.post('/authenticate', async (req, res) => {
 router.get('/get_session', authenticator, (req, res) => {
   sessionData = req.session;
   const userObj = {};
-  if (sessionData.user) {
-    userObj.user = sessionData.user;
-  }
-  return res.json(userObj.user);
+  userObj.user = sessionData.user;
+  return res.status(200).json(userObj.user);
 });
 
 // Responsible for destroying a session
