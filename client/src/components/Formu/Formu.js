@@ -1,52 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Button } from 'react-bootstrap';
 import { register, login } from '../../API';
+import { useForm } from '../../Hooks/useForm';
 
 const Formu = ({ isRegister, onHide, setUser }) => {
-  const [newUser, setNewUser] = useState({
+  const [values, handleChange] = useForm({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
 
-  //Handles the input data that comes from the form
-  const handleAddFormChange = (event) => {
-    event.preventDefault();
-
-    const fieldName = event.target.getAttribute('name');
-    const fieldValue = event.target.value;
-    let newFormData = {};
-    newFormData = { ...newUser };
-    newFormData[fieldName] = fieldValue;
-    setNewUser(newFormData);
-  };
-
   //Handles the submit allowing the user register or login
   const handleAddFormSubmit = (event) => {
     event.preventDefault();
 
     const userObj = {
-      username: newUser.username,
-      email: newUser.email,
-      password: newUser.password,
-      confirmPassword: newUser.confirmPassword,
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      confirmPassword: values.confirmPassword,
     };
-    setNewUser(userObj);
 
     const registerOrLogin = async () => {
       try {
         if (isRegister) {
-          const response = await register(newUser);
+          const response = await register(userObj);
           alert(response.message);
         } else {
           const response = await login(userObj.username, userObj.password);
           alert(`Welcome ${response.username}`);
           setUser(response);
           localStorage.setItem('loggedIn', true);
+          window.location.reload();
         }
-        setNewUser({});
         onHide(); //closes the modal
       } catch (error) {
         console.error(error);
@@ -60,31 +48,29 @@ const Formu = ({ isRegister, onHide, setUser }) => {
       <Form.Group className='mb-3'>
         <Form.Label>Username</Form.Label>
         <Form.Control
-          type='username'
           name='username'
+          value={values.username}
           placeholder='Enter Username'
-          onChange={handleAddFormChange}
+          onChange={handleChange}
         />
         {isRegister ? (
           <>
-            <Form.Label>Email address</Form.Label>
+            <Form.Label>Email</Form.Label>
             <Form.Control
-              type='email'
               name='email'
+              value={values.email}
               placeholder='Enter email'
-              onChange={handleAddFormChange}
+              onChange={handleChange}
             />
           </>
         ) : null}
-      </Form.Group>
-
-      <Form.Group className='mb-3'>
         <Form.Label>Password</Form.Label>
         <Form.Control
           type='password'
           name='password'
-          placeholder='Password'
-          onChange={handleAddFormChange}
+          value={values.password}
+          placeholder='Enter password'
+          onChange={handleChange}
         />
         {isRegister ? (
           <>
@@ -92,8 +78,9 @@ const Formu = ({ isRegister, onHide, setUser }) => {
             <Form.Control
               type='password'
               name='confirmPassword'
-              placeholder='Password'
-              onChange={handleAddFormChange}
+              value={values.confirmPasswords}
+              placeholder='Confirm password'
+              onChange={handleChange}
             />
           </>
         ) : null}
