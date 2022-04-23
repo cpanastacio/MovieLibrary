@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Navbar,
@@ -49,13 +49,14 @@ const Header = () => {
       try {
         const result = await logout();
         localStorage.clear();
+        setUser('');
+        // navigate(`/`);
         return result.data;
       } catch (error) {
         console.error(error);
       }
     };
     fetchRequest();
-    window.location.reload(true);
   };
 
   return (
