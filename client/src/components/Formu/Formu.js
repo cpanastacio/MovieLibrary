@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Button } from 'react-bootstrap';
 import { register, login } from '../../API';
 import { useForm } from '../../Hooks/useForm';
+import { UserContext } from '../../Hooks/userContext';
 
-const Formu = ({ isRegister, onHide, setUser }) => {
+const Formu = ({ isRegister, onHide }) => {
+  const { setUser } = useContext(UserContext);
+
   const [values, handleChange] = useForm({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    description: '',
   });
 
   //Handles the submit allowing the user register or login
@@ -21,6 +27,9 @@ const Formu = ({ isRegister, onHide, setUser }) => {
       email: values.email,
       password: values.password,
       confirmPassword: values.confirmPassword,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      description: values.description,
     };
 
     const registerOrLogin = async () => {
@@ -33,7 +42,6 @@ const Formu = ({ isRegister, onHide, setUser }) => {
           alert(`Welcome ${response.username}`);
           setUser(response);
           localStorage.setItem('loggedIn', true);
-          window.location.reload();
         }
         onHide(); //closes the modal
       } catch (error) {
@@ -46,6 +54,24 @@ const Formu = ({ isRegister, onHide, setUser }) => {
   return (
     <Form>
       <Form.Group className='mb-3'>
+        {isRegister && (
+          <>
+            <Form.Label>First Name</Form.Label>
+            <Form.Control
+              name='firstName'
+              value={values.firstName}
+              placeholder='Enter first name'
+              onChange={handleChange}
+            />
+            <Form.Label>Last Name</Form.Label>
+            <Form.Control
+              name='lastName'
+              value={values.lastName}
+              placeholder='Enter last name'
+              onChange={handleChange}
+            />
+          </>
+        )}
         <Form.Label>Username</Form.Label>
         <Form.Control
           name='username'
@@ -53,7 +79,7 @@ const Formu = ({ isRegister, onHide, setUser }) => {
           placeholder='Enter Username'
           onChange={handleChange}
         />
-        {isRegister ? (
+        {isRegister && (
           <>
             <Form.Label>Email</Form.Label>
             <Form.Control
@@ -63,7 +89,7 @@ const Formu = ({ isRegister, onHide, setUser }) => {
               onChange={handleChange}
             />
           </>
-        ) : null}
+        )}
         <Form.Label>Password</Form.Label>
         <Form.Control
           type='password'
@@ -72,7 +98,7 @@ const Formu = ({ isRegister, onHide, setUser }) => {
           placeholder='Enter password'
           onChange={handleChange}
         />
-        {isRegister ? (
+        {isRegister && (
           <>
             <Form.Label>Confirm password</Form.Label>
             <Form.Control
@@ -83,7 +109,7 @@ const Formu = ({ isRegister, onHide, setUser }) => {
               onChange={handleChange}
             />
           </>
-        ) : null}
+        )}
       </Form.Group>
       <Button
         variant='primary'
@@ -99,7 +125,6 @@ const Formu = ({ isRegister, onHide, setUser }) => {
 Formu.propTypes = {
   isRegister: PropTypes.bool,
   onHide: PropTypes.func,
-  setUser: PropTypes.func,
 };
 
 export default Formu;

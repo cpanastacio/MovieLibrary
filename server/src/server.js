@@ -15,11 +15,14 @@ server.use(routes);
 
 const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.zgoi4.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`;
 
-mongoose.connect(uri).then(() => {
-  server.listen(PORT, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-});
+mongoose
+  .connect(uri)
+  .then(() => {
+    server.listen(PORT, () => {
+      // eslint-disable-next-line no-console
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => console.error(error));
 
 module.exports = server;

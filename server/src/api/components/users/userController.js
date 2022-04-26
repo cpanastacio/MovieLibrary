@@ -12,14 +12,18 @@ const User = mongoose.model('User', userSchema.schema);
  * @returns
  */
 async function register(req, res) {
-  const { username, password, email } = req.body;
+  const { username, email, firstName, lastName, description } = req.body;
+
   const SALT_ROUNDS = 10;
   try {
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    const hashedPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
     const user = {
       username,
       password: hashedPassword,
       email,
+      firstName,
+      lastName,
+      description,
     };
     await User.insertMany(user);
     return res.json({ message: `User ${user.username} created!` });
@@ -60,6 +64,9 @@ async function loginUser(username, password) {
       id: user[0]._id,
       username: user[0].username,
       email: user[0].email,
+      firstName: user[0].firstName,
+      lastName: user[0].lastName,
+      description: user[0].description,
     };
   } catch (error) {
     return { status: 500, message: error.message };

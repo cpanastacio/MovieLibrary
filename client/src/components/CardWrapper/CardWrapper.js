@@ -7,15 +7,17 @@ const CardWrapper = () => {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const response = await getMovies();
-        return setMovies(response);
-      } catch (error) {
-        console.error(error);
-      }
+    return () => {
+      const fetchMovies = async () => {
+        try {
+          const response = await getMovies();
+          return setMovies(response);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchMovies();
     };
-    fetchMovies();
   }, []);
 
   return (
