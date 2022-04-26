@@ -3,14 +3,14 @@ import { Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import Formu from '../Formu/Formu';
 
-const ModalForm = ({ show, onHide, header, isRegister, setUser }) => {
+const ModalForm = ({ show, onHide, header, isRegister }) => {
   return (
     <Modal show={show} onHide={onHide} animation={false}>
       <Modal.Header closeButton>
         <Modal.Title>{header}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Formu isRegister={isRegister} onHide={onHide} setUser={setUser} />
+        <Formu isRegister={isRegister} onHide={onHide} />
       </Modal.Body>
       <Modal.Footer>
         <Button variant='secondary' data-bs-dismiss='modal' onClick={onHide}>
@@ -26,7 +26,6 @@ ModalForm.propTypes = {
   isRegister: PropTypes.bool,
   onHide: PropTypes.func,
   header: PropTypes.string,
-  setUser: PropTypes.func,
 };
 
 export default ModalForm;

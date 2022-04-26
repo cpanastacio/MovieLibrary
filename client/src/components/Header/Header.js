@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Navbar,
@@ -9,10 +9,12 @@ import {
   FormControl,
   Button,
 } from 'react-bootstrap';
-import { getMovieIfNotExistsAddsDB, logout, getSession } from '../../API';
+import { getMovieIfNotExistsAddsDB, logout } from '../../API';
 import ModalForm from '../ModalForm/ModalForm';
+import { UserContext } from '../../Hooks/userContext';
 
 const Header = () => {
+  const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleUserProfile = () => {
@@ -22,12 +24,6 @@ const Header = () => {
   const [movie, setMovie] = useState('');
   const [modalShowR, setModalShowR] = useState(false);
   const [modalShowL, setModalShowL] = useState(false);
-
-  const [user, setUser] = useState();
-
-  useEffect(() => {
-    getSession().then((myData) => setUser(myData));
-  }, []);
 
   const handleOnChange = (e) => {
     setMovie(e.target.value);
@@ -48,9 +44,9 @@ const Header = () => {
     const fetchRequest = async () => {
       try {
         const result = await logout();
-        localStorage.clear();
         setUser('');
-        // navigate(`/`);
+        localStorage.clear();
+        navigate(`/`);
         return result.data;
       } catch (error) {
         console.error(error);
@@ -62,11 +58,13 @@ const Header = () => {
   return (
     <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
       <Container>
-        <Navbar.Brand href='/'>Movies Library</Navbar.Brand>
+        <Navbar.Brand>
+          <h1>Movies Library</h1>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
         <Navbar.Collapse id='responsive-navbar-nav'>
           <Nav className='me-auto'>
-            {/* <Nav.Link href='/'>Home</Nav.Link> */}
+            <Nav.Link href='/'>Home</Nav.Link>
             <Form className='d-flex'>
               <FormControl
                 value={movie}
@@ -83,10 +81,10 @@ const Header = () => {
           </Nav>
           <Nav>
             <NavDropdown
-              title={user ? user.username : 'User'}
+              title={Object.keys(user).length > 0 ? user.username : 'User'}
               id='collasible-nav-dropdown'
             >
-              {!user ? (
+              {Object.keys(user).length === 0 ? (
                 <NavDropdown.Item>
                   <h6 onClick={() => setModalShowR(true)}>Register</h6>
                   <ModalForm
@@ -98,7 +96,7 @@ const Header = () => {
                 </NavDropdown.Item>
               ) : null}
 
-              {!user ? (
+              {Object.keys(user).length === 0 ? (
                 <NavDropdown.Item>
                   <h6 onClick={() => setModalShowL(true)}>Login</h6>
                   <ModalForm
@@ -106,11 +104,10 @@ const Header = () => {
                     onHide={() => setModalShowL(false)}
                     header={'Login'}
                     isRegister={false}
-                    setUser={setUser}
                   />
                 </NavDropdown.Item>
               ) : null}
-              {user != null ? (
+              {Object.keys(user).length > 0 ? (
                 <NavDropdown.Item onClick={handleUserProfile}>
                   User profile
                 </NavDropdown.Item>
