@@ -87,7 +87,9 @@ function UserCard() {
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
         </Form.Group>
       </Row>
-      <Button type='submit'>Submit form</Button>
+      <Button variant='outline-success' type='submit'>
+        Submit form
+      </Button>
     </Form>
   );
 }

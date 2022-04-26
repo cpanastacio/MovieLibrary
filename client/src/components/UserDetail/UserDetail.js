@@ -17,10 +17,9 @@ function UserDetail() {
           onSelect={(k) => setKey(k)}
           className='mb-3'
         >
-          <Tab eventKey='home' title='Home'></Tab>
+          <Tab eventKey='movies' title='Titles Watched'></Tab>
 
           <Tab eventKey='profile' title='Profile'></Tab>
-          <Tab eventKey='contact' title='Contact' disabled></Tab>
         </Tabs>
       </div>
       {key === 'profile' ? (
