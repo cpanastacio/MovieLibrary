@@ -53,3 +53,43 @@ export async function logout() {
     throw new Error(error);
   }
 }
+
+export async function getPostsByTitle(title) {
+  try {
+    const posts = await axios.get(`/post/${title}`);
+    return posts.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function updatePostById(id, post) {
+  try {
+    const postToBeUpdated = await axios.patch(`/post/${id}`, { post });
+    return postToBeUpdated.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+export async function deletePostById(id) {
+  try {
+    const postToBeUpdated = await axios.delete(`/post/${id}`);
+    return postToBeUpdated.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function insertPost(postObj) {
+  try {
+    const { username, title, comment } = postObj;
+    const postToBeUpdated = await axios.post(`/post`, {
+      username,
+      title,
+      comment,
+    });
+    return postToBeUpdated.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}

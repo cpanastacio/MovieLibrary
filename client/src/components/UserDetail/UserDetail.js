@@ -22,11 +22,11 @@ function UserDetail() {
           <Tab eventKey='profile' title='Profile'></Tab>
         </Tabs>
       </div>
-      {key === 'profile' ? (
+      {key === 'profile' && (
         <div>
           <UserCard />
         </div>
-      ) : null}
+      )}
     </>
   );
 }
