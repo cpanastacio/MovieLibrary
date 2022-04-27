@@ -46,32 +46,34 @@ const Posts = ({ title }) => {
 
   return (
     <>
-      <Card
-        style={{
-          width: '1000px',
-          margin: 'auto',
-          marginTop: '1rem',
-        }}
-      >
-        <Card.Body>
-          <Card.Title>Post new comment</Card.Title>
-          <Card.Text>
-            <Form.Control
-              name='comment'
-              placeholder='Comment'
-              value={values.comment}
-              onChange={handleChange}
-            />
-          </Card.Text>
-          <Button
-            variant='primary'
-            type='submit'
-            onClick={() => handleNewPost()}
-          >
-            Submit
-          </Button>
-        </Card.Body>
-      </Card>
+      <Row>
+        <Card
+          style={{
+            width: '100rem',
+            margin: 'auto',
+            marginTop: '1rem',
+          }}
+        >
+          <Card.Body>
+            <Card.Title>Post new comment</Card.Title>
+            <Card.Text>
+              <Form.Control
+                name='comment'
+                placeholder='Comment'
+                value={values.comment}
+                onChange={handleChange}
+              />
+            </Card.Text>
+            <Button
+              variant='primary'
+              type='submit'
+              onClick={() => handleNewPost()}
+            >
+              Submit
+            </Button>
+          </Card.Body>
+        </Card>
+      </Row>
       {comments &&
         comments.map((comment, i) => {
           return (
@@ -83,7 +85,7 @@ const Posts = ({ title }) => {
               }}
               key={comment + i + 1}
             >
-              <Card key={i} style={{ width: '100rem' }}>
+              <Card key={comment._id} style={{ width: '100rem' }}>
                 <Card.Body>
                   <Card.Title>
                     <pre key={comment + i}>{`Post by: ${
