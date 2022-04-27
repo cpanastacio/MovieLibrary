@@ -9,6 +9,7 @@ const validator = require('./middleware/validator');
 const authenticator = require('./middleware/authenticator');
 const movies = require('./components/movies/moviesController');
 const user = require('./components/users/userController');
+const posts = require('./components/posts/posts');
 const schemas = require('./schemas');
 
 router.use(
@@ -66,5 +67,16 @@ router.get('/destroysession', authenticator, (req, res) => {
     return res.json({ message: 'Session destroyed successfully' });
   });
 });
+
+router.post(
+  '/post',
+  validator(schemas.post.createPost),
+  authenticator,
+  posts.createPost,
+);
+
+router.get('/post/:title', posts.getCommentsByTitle);
+router.patch('/post/:id', authenticator, posts.updateCommentById);
+router.delete('/post/:id', authenticator, posts.deleteCommentById);
 
 module.exports = router;
