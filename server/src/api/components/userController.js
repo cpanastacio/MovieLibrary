@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const userSchema = require('../../models/users');
+const userSchema = require('../models/users');
 
 const User = mongoose.model('User', userSchema.schema);
 

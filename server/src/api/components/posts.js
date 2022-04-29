@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const postsSchema = require('../../models/posts');
+const postsSchema = require('../models/posts');
 
 const Post = mongoose.model('Post', postsSchema.schema);
 

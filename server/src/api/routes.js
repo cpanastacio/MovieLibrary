@@ -7,9 +7,9 @@ const session = require('express-session');
 
 const validator = require('./middleware/validator');
 const authenticator = require('./middleware/authenticator');
-const movies = require('./components/movies/moviesController');
-const user = require('./components/users/userController');
-const posts = require('./components/posts/posts');
+const movies = require('./components/moviesController');
+const user = require('./components/userController');
+const posts = require('./components/posts');
 const schemas = require('./schemas');
 
 router.use(
@@ -68,6 +68,7 @@ router.get('/destroysession', authenticator, (req, res) => {
   });
 });
 
+// Responsible for creating a new post
 router.post(
   '/post',
   validator(schemas.post.createPost),
@@ -75,13 +76,18 @@ router.post(
   posts.createPost,
 );
 
+// Responsible for fetching all the posts by title
 router.get('/post/:title', posts.getCommentsByTitle);
+
+// Responsible for updating a post
 router.patch(
   '/post/:id',
   validator(schemas.post.update),
   authenticator,
   posts.updateCommentById,
 );
+
+// Responsible for deleting a post
 router.delete('/post/:id', authenticator, posts.deleteCommentById);
 
 module.exports = router;

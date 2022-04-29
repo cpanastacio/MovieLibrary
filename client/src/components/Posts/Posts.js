@@ -12,7 +12,6 @@ import { useForm } from '../../Hooks/useForm';
 
 const Posts = ({ title }) => {
   const [comments, setComments] = useState([]);
-  // const [updateComment, setUpdateComment] = useState('');
   const { user } = useContext(UserContext);
   const [values, handleChange] = useForm({
     username: '',
@@ -91,7 +90,6 @@ const Posts = ({ title }) => {
                   placeholder='Comment'
                   value={values.comment}
                   onChange={handleChange}
-                  type
                 />
               </Card.Text>
               <Button
@@ -110,57 +108,49 @@ const Posts = ({ title }) => {
       {comments &&
         comments.map((comment, i) => {
           return (
-            <>
-              <Row
-                className='row d-flex justify-content-center'
-                style={{
-                  marginTop: '1rem',
-                }}
-                key={comment + i + 1}
-              >
-                <Card
-                  key={comment._id}
-                  style={{ width: '50%', height: '10rem' }}
-                >
-                  <Card.Body>
-                    <Card.Title>
-                      <pre key={comment + i}>{`Post by: ${
-                        comment.username
-                      } @ ${new Date(comment.createdAt).toUTCString()}`}</pre>
-                    </Card.Title>
-                    <Card.Text>
-                      <Form.Control
-                        key={i}
-                        style={{ textAlign: 'center' }}
-                        type='text'
-                        name='updateComment'
-                        disabled={user.username !== comment.username}
-                        defaultValue={comment.post}
-                        onChange={handleChange}
-                        required
-                      />
-                    </Card.Text>
-                    <Button
-                      variant='danger'
-                      key={comment.post + comment._id}
-                      hidden={user.username !== comment.username}
-                      onClick={() => handleDeletePost(comment)}
-                    >
-                      Delete
-                    </Button>
-                    &nbsp;
-                    <Button
-                      key={comment}
-                      variant='outline-success'
-                      hidden={user.username !== comment.username}
-                      onClick={() => handleUpdatePost(comment._id)}
-                    >
-                      Update
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Row>
-            </>
+            <Row
+              className='row d-flex justify-content-center'
+              style={{
+                marginTop: '1rem',
+              }}
+              key={i}
+            >
+              <Card style={{ width: '50%', height: '10rem' }}>
+                <Card.Body>
+                  <Card.Title>
+                    <pre>{`Post by: ${comment.username} @ ${new Date(
+                      comment.createdAt,
+                    ).toUTCString()}`}</pre>
+                  </Card.Title>
+                  <Card.Text>
+                    <Form.Control
+                      style={{ textAlign: 'center' }}
+                      type='text'
+                      name='updateComment'
+                      disabled={user.username !== comment.username}
+                      defaultValue={comment.post}
+                      onChange={handleChange}
+                      required
+                    />
+                  </Card.Text>
+                  <Button
+                    variant='danger'
+                    hidden={user.username !== comment.username}
+                    onClick={() => handleDeletePost(comment)}
+                  >
+                    Delete
+                  </Button>
+                  &nbsp;
+                  <Button
+                    variant='outline-success'
+                    hidden={user.username !== comment.username}
+                    onClick={() => handleUpdatePost(comment._id)}
+                  >
+                    Update
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Row>
           );
         })}
     </>

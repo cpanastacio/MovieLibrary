@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const axios = require('axios');
-const movieSchema = require('../../models/movie');
+const movieSchema = require('../models/movie');
 
 const Movie = mongoose.model('Movie', movieSchema.schema);
 // const asyncValidator = require('../helpers/utils');
