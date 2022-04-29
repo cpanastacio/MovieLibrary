@@ -56,7 +56,13 @@ const Header = () => {
   };
 
   return (
-    <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
+    <Navbar
+      collapseOnSelect
+      expand='lg'
+      bg='dark'
+      variant='dark'
+      style={{ position: 'sticky', top: 0 }}
+    >
       <Container>
         <Navbar.Brand>
           <h1>Movies Library</h1>
@@ -84,35 +90,38 @@ const Header = () => {
               title={Object.keys(user).length > 0 ? user.username : 'User'}
               id='collasible-nav-dropdown'
             >
-              {Object.keys(user).length === 0 ? (
-                <NavDropdown.Item>
-                  <h6 onClick={() => setModalShowR(true)}>Register</h6>
-                  <ModalForm
-                    show={modalShowR}
-                    onHide={() => setModalShowR(false)}
-                    header={'Create new account'}
-                    isRegister={true}
-                  />
-                </NavDropdown.Item>
-              ) : null}
-
-              {Object.keys(user).length === 0 ? (
-                <NavDropdown.Item>
-                  <h6 onClick={() => setModalShowL(true)}>Login</h6>
-                  <ModalForm
-                    show={modalShowL}
-                    onHide={() => setModalShowL(false)}
-                    header={'Login'}
-                    isRegister={false}
-                  />
-                </NavDropdown.Item>
-              ) : null}
-              {Object.keys(user).length > 0 ? (
-                <NavDropdown.Item onClick={handleUserProfile}>
-                  User profile
-                </NavDropdown.Item>
-              ) : null}
-              <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+              {Object.keys(user).length === 0 && (
+                <>
+                  <NavDropdown.Item>
+                    <h6 onClick={() => setModalShowR(true)}>Register</h6>
+                    <ModalForm
+                      show={modalShowR}
+                      onHide={() => setModalShowR(false)}
+                      header={'Create new account'}
+                      isRegister={true}
+                    />
+                  </NavDropdown.Item>
+                  <NavDropdown.Item>
+                    <h6 onClick={() => setModalShowL(true)}>Login</h6>
+                    <ModalForm
+                      show={modalShowL}
+                      onHide={() => setModalShowL(false)}
+                      header={'Login'}
+                      isRegister={false}
+                    />
+                  </NavDropdown.Item>
+                </>
+              )}
+              {Object.keys(user).length > 0 && (
+                <>
+                  <NavDropdown.Item onClick={handleUserProfile}>
+                    User profile
+                  </NavDropdown.Item>
+                  <NavDropdown.Item onClick={handleLogout}>
+                    Logout
+                  </NavDropdown.Item>
+                </>
+              )}
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

@@ -22,7 +22,7 @@ const MovieCard = ({ movie }) => {
       }}
     >
       <Card.Img variant='top' src={movie.poster} style={{ height: '24em' }} />
-      <Card.Body style={{ backgroundColor: 'black' }}>
+      <Card.Body>
         <Card.Title>{movie.title}</Card.Title>
         <Card.Text>Rating: {movie.rating}</Card.Text>
         <Card.Text>

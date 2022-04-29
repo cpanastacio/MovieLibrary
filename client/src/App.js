@@ -17,7 +17,6 @@ function App() {
   useEffect(() => {
     return () => {
       const isLoggedIn = localStorage.getItem('loggedIn');
-      console.log('isLoggedIn', isLoggedIn);
       if (isLoggedIn) {
         getSession().then((res) => setUser(res));
       }
@@ -40,9 +39,9 @@ function App() {
               }
             ></Route>
             <Route path={`/tv:title`} element={<MovieDetails />}></Route>
-            {Object.keys(user).length > 0 ? (
+            {Object.keys(user).length > 0 && (
               <Route path={`/user`} element={<UserDetail />}></Route>
-            ) : null}
+            )}
             <Route path={`*`} element={<h1>404. Page not found!</h1>}></Route>
           </Routes>
         </UserContext.Provider>

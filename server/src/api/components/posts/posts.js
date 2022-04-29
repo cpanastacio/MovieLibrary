@@ -44,7 +44,7 @@ async function getCommentsByTitle(req, res) {
   try {
     const post = await Post.find({
       title: { $regex: req.params.title },
-    });
+    }).sort({ createdAt: -1 }); // (Display the date in descending order)
     if (post.length > 0) {
       return res.json(post);
     }
@@ -69,7 +69,7 @@ async function updateCommentById(req, res) {
     const filter = { _id: req.params.id };
     const updateDoc = {
       $set: {
-        post: req.body.comment,
+        post: req.body.post,
       },
     };
 

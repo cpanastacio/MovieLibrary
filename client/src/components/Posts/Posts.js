@@ -1,22 +1,37 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Card, Button, Form, Row } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { deletePostById, getPostsByTitle, insertPost } from '../../API';
+import {
+  deletePostById,
+  getPostsByTitle,
+  insertPost,
+  updatePostById,
+} from '../../API';
 import { UserContext } from '../../Hooks/userContext';
 import { useForm } from '../../Hooks/useForm';
 
 const Posts = ({ title }) => {
-  const [comments, setComments] = useState('');
+  const [comments, setComments] = useState([]);
+  // const [updateComment, setUpdateComment] = useState('');
   const { user } = useContext(UserContext);
   const [values, handleChange] = useForm({
     username: '',
     title: '',
     comment: '',
+    updateComment: '',
   });
 
   useEffect(() => {
-    getPostsByTitle(title).then((res) => setComments(res));
-  }, []);
+    const fetchData = async () => {
+      try {
+        const response = await getPostsByTitle(title);
+        return setComments(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, [title]);
 
   const handleDeletePost = async (comment) => {
     try {
@@ -44,82 +59,108 @@ const Posts = ({ title }) => {
     }
   };
 
+  const handleUpdatePost = async (commentId) => {
+    try {
+      await updatePostById(commentId, values.updateComment);
+      values.updateComment = '';
+      const updatedResults = await getPostsByTitle(title);
+      return setComments(updatedResults);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
-      <Row>
-        <Card
-          style={{
-            width: '100rem',
-            margin: 'auto',
-            marginTop: '1rem',
-          }}
-        >
-          <Card.Body>
-            <Card.Title>Post new comment</Card.Title>
-            <Card.Text>
-              <Form.Control
-                name='comment'
-                placeholder='Comment'
-                value={values.comment}
-                onChange={handleChange}
-              />
-            </Card.Text>
-            <Button
-              variant='primary'
-              type='submit'
-              onClick={() => handleNewPost()}
-            >
-              Submit
-            </Button>
-          </Card.Body>
-        </Card>
-      </Row>
+      {user.username && (
+        <Row>
+          <Card
+            style={{
+              width: '50%',
+              margin: 'auto',
+              marginTop: '1rem',
+              minHeight: '11rem',
+            }}
+          >
+            <Card.Body>
+              <Card.Title>Post new comment</Card.Title>
+              <Card.Text>
+                <Form.Control
+                  style={{ textAlign: 'center', height: '3rem' }}
+                  name='comment'
+                  placeholder='Comment'
+                  value={values.comment}
+                  onChange={handleChange}
+                  type
+                />
+              </Card.Text>
+              <Button
+                variant='primary'
+                type='submit'
+                hidden={values.comment == ''}
+                onClick={() => handleNewPost()}
+              >
+                Submit
+              </Button>
+            </Card.Body>
+          </Card>
+        </Row>
+      )}
+
       {comments &&
         comments.map((comment, i) => {
           return (
-            <Row
-              style={{
-                width: '1000px',
-                margin: 'auto',
-                marginTop: '1rem',
-              }}
-              key={comment + i + 1}
-            >
-              <Card key={comment._id} style={{ width: '100rem' }}>
-                <Card.Body>
-                  <Card.Title>
-                    <pre key={comment + i}>{`Post by: ${
-                      comment.username
-                    } @ ${new Date(comment.createdAt).toUTCString()}`}</pre>
-                  </Card.Title>
-                  <Card.Text>
-                    <Form.Control
-                      type='text'
-                      placeholder='Comment'
-                      aria-describedby='inputGroupPrepend'
-                      defaultValue={comment.post}
-                      required
-                    />
-                    <Form.Control.Feedback type='invalid'>
-                      Please choose a username.
-                    </Form.Control.Feedback>
-                  </Card.Text>
-                  {user.username === comment.username ? (
-                    <>
-                      <Button
-                        variant='primary'
-                        onClick={() => handleDeletePost(comment)}
-                      >
-                        Delete
-                      </Button>
-                      <Button variant='primary'>Update</Button>
-                    </>
-                  ) : (
-                    ''
-                  )}
-                </Card.Body>
-              </Card>
-            </Row>
+            <>
+              <Row
+                className='row d-flex justify-content-center'
+                style={{
+                  marginTop: '1rem',
+                }}
+                key={comment + i + 1}
+              >
+                <Card
+                  key={comment._id}
+                  style={{ width: '50%', height: '10rem' }}
+                >
+                  <Card.Body>
+                    <Card.Title>
+                      <pre key={comment + i}>{`Post by: ${
+                        comment.username
+                      } @ ${new Date(comment.createdAt).toUTCString()}`}</pre>
+                    </Card.Title>
+                    <Card.Text>
+                      <Form.Control
+                        key={i}
+                        style={{ textAlign: 'center' }}
+                        type='text'
+                        name='updateComment'
+                        disabled={user.username !== comment.username}
+                        defaultValue={comment.post}
+                        onChange={handleChange}
+                        required
+                      />
+                    </Card.Text>
+                    <Button
+                      variant='danger'
+                      key={comment.post + comment._id}
+                      hidden={user.username !== comment.username}
+                      onClick={() => handleDeletePost(comment)}
+                    >
+                      Delete
+                    </Button>
+                    &nbsp;
+                    <Button
+                      key={comment}
+                      variant='outline-success'
+                      hidden={user.username !== comment.username}
+                      onClick={() => handleUpdatePost(comment._id)}
+                    >
+                      Update
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Row>
+            </>
           );
         })}
     </>

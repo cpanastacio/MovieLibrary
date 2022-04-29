@@ -21,7 +21,7 @@ const CardWrapper = () => {
   }, []);
 
   return (
-    <Row>
+    <Row className='row d-flex justify-content-center'>
       {movies.map((m, i) => {
         return (
           <Col key={m + i}>

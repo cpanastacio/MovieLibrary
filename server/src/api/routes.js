@@ -76,7 +76,12 @@ router.post(
 );
 
 router.get('/post/:title', posts.getCommentsByTitle);
-router.patch('/post/:id', authenticator, posts.updateCommentById);
+router.patch(
+  '/post/:id',
+  validator(schemas.post.update),
+  authenticator,
+  posts.updateCommentById,
+);
 router.delete('/post/:id', authenticator, posts.deleteCommentById);
 
 module.exports = router;

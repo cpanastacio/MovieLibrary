@@ -13,4 +13,8 @@ validationSchema.postBy = Joi.object({
   title: Joi.string().max(120).required().allow(''),
 });
 
+validationSchema.update = Joi.object({
+  post: Joi.string(),
+});
+
 module.exports = validationSchema;
