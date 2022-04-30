@@ -8,6 +8,7 @@ const userSchema = new Schema(
     password: { type: String, required: true },
     description: { type: String, required: false },
     email: { type: String, required: true, unique: true },
+    watchlist: [{ type: String }],
   },
   {
     timestamps: true,

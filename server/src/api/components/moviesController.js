@@ -41,6 +41,25 @@ async function getMovieById(req, res) {
     return res.json(error);
   }
 }
+/**
+ * Responsible for fetching a list of movies by their id
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @returns
+ */
+async function getMoviesWithArray(req, res) {
+  const filter = { _id: { $in: req.body.movieArray } };
+
+  try {
+    const m = await Movie.find(filter);
+    return res.status(200).json(m);
+  } catch (error) {
+    if (error && error.status && error.status !== 200) {
+      return res.status(error.status).json(error.message);
+    }
+    return res.json(error);
+  }
+}
 
 async function getMovieIfNotExistsAddsDB(req, res) {
   try {
@@ -79,4 +98,5 @@ module.exports = {
   getMovies,
   getMovieById,
   getMovieIfNotExistsAddsDB,
+  getMoviesWithArray,
 };

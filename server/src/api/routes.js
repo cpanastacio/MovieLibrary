@@ -26,6 +26,7 @@ let sessionData;
 router.get('/movies', movies.getMovies);
 router.get('/movies/:id', movies.getMovieById);
 router.get('/movie/:name', movies.getMovieIfNotExistsAddsDB);
+router.post('/movies/watchlist', authenticator, movies.getMoviesWithArray);
 
 // Endpoint responsible for creating a new user in the system
 router.post('/register', validator(schemas.user.register), user.register);
@@ -67,6 +68,13 @@ router.get('/destroysession', authenticator, (req, res) => {
     return res.json({ message: 'Session destroyed successfully' });
   });
 });
+
+router.patch(
+  '/user',
+  validator(schemas.user.update),
+  authenticator,
+  user.update,
+);
 
 // Responsible for creating a new post
 router.post(

@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// MOVIES
 export async function getMovies() {
   try {
     const movies = await axios.get(`/movies`);
@@ -18,6 +19,18 @@ export async function getMovieIfNotExistsAddsDB(name) {
   }
 }
 
+export async function getMoviesWithArray(movieArray) {
+  try {
+    const movies = await axios.post(`/movies/watchlist`, {
+      movieArray,
+    });
+    return movies.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+// USERS
 export async function register(user) {
   try {
     const createUser = await axios.post(`/register`, user);
@@ -54,6 +67,7 @@ export async function logout() {
   }
 }
 
+// POSTS
 export async function getPostsByTitle(title) {
   try {
     const posts = await axios.get(`/post/${title}`);
