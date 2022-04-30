@@ -67,6 +67,24 @@ export async function logout() {
   }
 }
 
+export async function updateUser(user) {
+  try {
+    const updateUser = await axios.patch('/user', user);
+    return updateUser.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function removeFromWatchlist(title) {
+  try {
+    const result = await axios.patch(`/user/removeFromWatchlist/${title}`);
+    return result.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 // POSTS
 export async function getPostsByTitle(title) {
   try {

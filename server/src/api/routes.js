@@ -51,11 +51,10 @@ router.post(
 );
 
 // Responsible for fetching a user's session
-router.get('/get_session', authenticator, (req, res) => {
+router.get('/get_session', authenticator, async (req, res) => {
   sessionData = req.session;
-  const userObj = {};
-  userObj.user = sessionData.user;
-  return res.status(200).json(userObj.user);
+  const userData = await user.getUserById(sessionData.user.id);
+  return res.status(200).json(userData);
 });
 
 // Responsible for destroying a session
@@ -74,6 +73,12 @@ router.patch(
   validator(schemas.user.update),
   authenticator,
   user.update,
+);
+
+router.patch(
+  '/user/removeFromWatchlist/:id',
+  authenticator,
+  user.removeFromWatchlistArray,
 );
 
 // Responsible for creating a new post

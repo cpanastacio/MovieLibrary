@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Row, Col, Badge, Button } from 'react-bootstrap';
 import Rating from '../Rating/Rating';
 import Posts from '../Posts/Posts';
 
+import { getSession, updateUser } from '../../API';
+import { UserContext } from '../../Hooks/userContext';
+
 const MovieDetails = () => {
   const { movie } = {
     movie: useLocation().state.movie,
   };
+  const { user, setUser } = useContext(UserContext);
   const types = movie.genre.split(',');
+
+  const handleAddToWatchlist = async () => {
+    try {
+      await updateUser({ title: movie._id });
+      setUser(await getSession());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <Row
@@ -49,7 +63,10 @@ const MovieDetails = () => {
             {movie.plot}
             Writer: {movie.writer}
             Actors: {movie.actors}
-            <Button>Add to watchlist</Button>
+            {Object.keys(user).length > 0 &&
+            !user.watchlist.includes(movie._id) ? (
+              <Button onClick={handleAddToWatchlist}>Add to watchlist</Button>
+            ) : null}
           </Col>
         </Col>
         <Row>

@@ -1,28 +1,39 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Tab, Tabs, Row } from 'react-bootstrap';
+import { Tab, Tabs, Row, Col, Button } from 'react-bootstrap';
 import { UserContext } from '../../Hooks/userContext';
-import { getMoviesWithArray } from '../../API';
+import { getMoviesWithArray, getSession, removeFromWatchlist } from '../../API';
 import UserCard from '../UserCard/UserCard';
-import MovieCard from '../MovieCard/MovieCard';
+import MovieTable from '../MovieTable/MovieTable';
 
 function UserDetail() {
   const [key, setKey] = useState('movies');
   const [movies, setMovies] = useState('');
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
-    return () => {
-      const fetchData = async () => {
-        try {
-          const response = await getMoviesWithArray(user.watchlist);
-          return setMovies(response);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      fetchData();
+    getSession().then((res) => setUser(res));
+
+    const fetchData = async () => {
+      try {
+        const response = await getMoviesWithArray(user.watchlist);
+        return setMovies(response);
+      } catch (error) {
+        console.error(error);
+      }
     };
+    fetchData();
   }, []);
+
+  const handleRemoveFromWatchlist = async (title) => {
+    try {
+      await removeFromWatchlist(title);
+      const userUpdated = { ...user };
+      userUpdated.watchlist.filter((item) => item.title != title);
+      setMovies((current) => current.filter((item) => item._id != title));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -48,12 +59,35 @@ function UserDetail() {
       )}
 
       {key === 'movies' && (
-        <Row className='row d-flex justify-content-center'>
+        <>
           {movies &&
             movies.map((movie, id) => {
-              return <MovieCard key={id} movie={movie} />;
+              return (
+                <Row
+                  key={id}
+                  className='row d-flex justify-content-center'
+                  style={{ marginTop: '1rem' }}
+                >
+                  <MovieTable key={id + movie._id} movie={movie} />
+                  <Col
+                    key={movie + id}
+                    style={{
+                      maxWidth: '225px',
+                      textAlign: 'left',
+                      marginTop: '4rem',
+                    }}
+                  >
+                    <Button
+                      onClick={() => handleRemoveFromWatchlist(movie._id)}
+                      key={movie.title + id}
+                    >
+                      Remove from watchlist
+                    </Button>
+                  </Col>
+                </Row>
+              );
             })}
-        </Row>
+        </>
       )}
     </>
   );

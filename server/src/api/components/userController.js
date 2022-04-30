@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = require('../models/users');
+const { formatUserResponse } = require('../helpers/utils');
 
 const User = mongoose.model('User', userSchema.schema);
 
@@ -68,16 +69,21 @@ async function loginUser(username, password) {
         },
       };
     }
-    return {
-      // eslint-disable-next-line no-underscore-dangle
-      id: user[0]._id,
-      username: user[0].username,
-      email: user[0].email,
-      firstName: user[0].firstName,
-      lastName: user[0].lastName,
-      description: user[0].description,
-      watchlist: user[0].watchlist,
-    };
+    return formatUserResponse(user[0]);
+  } catch (error) {
+    return { status: 500, message: error.message };
+  }
+}
+
+/**
+ * Responsible for fetching a user by its id
+ * @param {String} id - User's id
+ * @returns
+ */
+async function getUserById(id) {
+  try {
+    const userData = await User.findById(id);
+    return formatUserResponse(userData);
   } catch (error) {
     return { status: 500, message: error.message };
   }
@@ -129,4 +135,38 @@ async function update(req, res) {
   }
 }
 
-module.exports = { register, loginUser, update };
+/**
+ * Responsible for removing a movie from the user's watchlist
+ * @param {Object} req - Request object
+ * @param {Object} req.session - Request session object
+ * @param {Object} req.session.user - Request session's user object
+ * @param {String} req.session.user.id - User's id
+ * @param {Object} req.params - Request body's params
+ * @param {String} req.body.id - Movie Id to be removed
+ * @param {Object} res - Response object
+ * @returns
+ */
+async function removeFromWatchlistArray(req, res) {
+  const filter = { _id: req.session.user.id };
+
+  const updateDoc = {
+    $pull: { watchlist: req.params.id },
+  };
+  try {
+    const removeMovie = await User.updateOne(filter, updateDoc);
+    if (removeMovie.modifiedCount === 1) {
+      return res.json({ modifiedCount: removeMovie.modifiedCount });
+    }
+    throw new Error('Could not update comment');
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+}
+
+module.exports = {
+  register,
+  loginUser,
+  update,
+  removeFromWatchlistArray,
+  getUserById,
+};
