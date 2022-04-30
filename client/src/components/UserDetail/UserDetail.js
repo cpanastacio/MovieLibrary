@@ -15,7 +15,6 @@ function UserDetail() {
       const fetchData = async () => {
         try {
           const response = await getMoviesWithArray(user.watchlist);
-          console.log(response);
           return setMovies(response);
         } catch (error) {
           console.error(error);

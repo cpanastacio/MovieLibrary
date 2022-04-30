@@ -3,15 +3,14 @@ const axios = require('axios');
 const movieSchema = require('../models/movie');
 
 const Movie = mongoose.model('Movie', movieSchema.schema);
-// const asyncValidator = require('../helpers/utils');
 
 /**
  * Responsible for getting the movies
- * @param {Object} req - Request object
- * @param {Object} res - Response object
+ * @param {*} _
+ * @param {Object} res - Response Object
  * @returns
  */
-async function getMovies(req, res) {
+async function getMovies(_, res) {
   try {
     const result = await Movie.find();
     return res.status(200).json(result);
@@ -25,6 +24,8 @@ async function getMovies(req, res) {
 /**
  * Responsible for fetching a movie by its id
  * @param {Object} req - Request object
+ * @param {Object} req.params - Request object params
+ * @param {Object} req.params.id - Movie's id
  * @param {Object} res - Response object
  * @returns
  */
@@ -44,6 +45,8 @@ async function getMovieById(req, res) {
 /**
  * Responsible for fetching a list of movies by their id
  * @param {Object} req - Request object
+ * @param {Object} req.body - Request object body
+ * @param {Array} req.body.movieArray - Array with the titles id
  * @param {Object} res - Response object
  * @returns
  */
@@ -61,6 +64,14 @@ async function getMoviesWithArray(req, res) {
   }
 }
 
+/**
+ * Responsible for searching a title, if it doesn't exist in the system adds it
+ * @param {Object} req - Request object
+ * @param {Object} req.params - Request object params
+ * @param {String} req.params.name - Name of the movie
+ * @param {Object} res - Response object
+ * @returns
+ */
 async function getMovieIfNotExistsAddsDB(req, res) {
   try {
     const m = await Movie.find({

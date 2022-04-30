@@ -61,6 +61,10 @@ async function getCommentsByTitle(req, res) {
 /**
  * Responsible for updating a given post
  * @param {Object} req - Request object
+ * @param {Object} req.params - Request object params
+ * @param {String} req.params.id - Movie's id
+ * @param {Object} req.body - Request object body
+ * @param {String} req.body.post - Edited post
  * @param {Object} res - Response object
  * @returns
  */

@@ -9,11 +9,11 @@ const User = mongoose.model('User', userSchema.schema);
  * Responsible for registering a user to the system
  * @param {Object} req - Request object
  * @param {Object} req.body - Request body's session
- * @param {Sring} req.body.username - User's username
- * @param {Sring} req.body.email - User's email
- * @param {Sring} req.body.firstName - User's firstName
- * @param {Sring} req.body.lastName - User's username lastName
- * @param {Sring} req.body.description - User's description
+ * @param {String} req.body.username - User's username
+ * @param {String} req.body.email - User's email
+ * @param {String} req.body.firstName - User's firstName
+ * @param {String} req.body.lastName - User's username lastName
+ * @param {String} req.body.description - User's description
  * @param {Array} req.body.watchlist - Title id
  * @param {Object} res - Response object
  * @returns
@@ -88,14 +88,14 @@ async function loginUser(username, password) {
  * @param {Object} req - Request object
  * @param {Object} req.session - Request session object
  * @param {Object} req.session.user - Request session's user object
- * @param {Sring} req.session.id - User's id
+ * @param {String} req.session.user.id - User's id
  * @param {Object} req.body - Request body's session
- * @param {Sring} req.body.username - User's username
- * @param {Sring} req.body.email - User's email
- * @param {Sring} req.body.firstName - User's firstName
- * @param {Sring} req.body.lastName - User's username lastName
- * @param {Sring} req.body.description - User's description
- * @param {Sring} req.body.title - Title id
+ * @param {String} req.body.username - User's username
+ * @param {String} req.body.email - User's email
+ * @param {String} req.body.firstName - User's firstName
+ * @param {String} req.body.lastName - User's username lastName
+ * @param {String} req.body.description - User's description
+ * @param {String} req.body.title - Title id
  * @param {Object} res - Response object
  * @returns
  */
