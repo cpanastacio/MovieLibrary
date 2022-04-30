@@ -61,7 +61,7 @@ const Header = () => {
       expand='lg'
       bg='dark'
       variant='dark'
-      style={{ position: 'sticky', top: 0 }}
+      style={{ position: 'flex', top: '0px' }}
     >
       <Container>
         <Navbar.Brand>
@@ -85,6 +85,9 @@ const Header = () => {
               </Button>
             </Form>
           </Nav>
+          {Object.keys(user).length > 0 && (
+            <Nav.Link onClick={handleUserProfile}>Watchlist</Nav.Link>
+          )}
           <Nav>
             <NavDropdown
               title={Object.keys(user).length > 0 ? user.username : 'User'}
@@ -113,14 +116,9 @@ const Header = () => {
                 </>
               )}
               {Object.keys(user).length > 0 && (
-                <>
-                  <NavDropdown.Item onClick={handleUserProfile}>
-                    User profile
-                  </NavDropdown.Item>
-                  <NavDropdown.Item onClick={handleLogout}>
-                    Logout
-                  </NavDropdown.Item>
-                </>
+                <NavDropdown.Item onClick={handleLogout}>
+                  Logout
+                </NavDropdown.Item>
               )}
             </NavDropdown>
           </Nav>

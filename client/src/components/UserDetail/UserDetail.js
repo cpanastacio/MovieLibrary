@@ -4,6 +4,7 @@ import { UserContext } from '../../Hooks/userContext';
 import { getMoviesWithArray, getSession, removeFromWatchlist } from '../../API';
 import UserCard from '../UserCard/UserCard';
 import MovieTable from '../MovieTable/MovieTable';
+import { useNavigate } from 'react-router';
 
 function UserDetail() {
   const [key, setKey] = useState('movies');
@@ -23,6 +24,13 @@ function UserDetail() {
     };
     fetchData();
   }, []);
+
+  const navigate = useNavigate();
+
+  const handleRowClick = (movie) => {
+    const newTitle = movie.title.replaceAll(' ', '+');
+    navigate(`/tv=${newTitle}`, { state: { movie: movie } });
+  };
 
   const handleRemoveFromWatchlist = async (title) => {
     try {
@@ -60,6 +68,7 @@ function UserDetail() {
 
       {key === 'movies' && (
         <>
+          <div>{movies.length} Titles</div>
           {movies &&
             movies.map((movie, id) => {
               return (
@@ -67,7 +76,10 @@ function UserDetail() {
                   key={id}
                   className='row d-flex justify-content-center'
                   style={{ marginTop: '1rem' }}
+                  cursor='pointer'
+                  onClick={() => handleRowClick(movie)}
                 >
+                  <hr></hr>
                   <MovieTable key={id + movie._id} movie={movie} />
                   <Col
                     key={movie + id}
